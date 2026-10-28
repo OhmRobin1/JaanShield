@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JaanBand: Worker Safety Monitor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#eef3f2;--card:#fff;--ink:#13262b;--muted:#52666b;--pri:#0f4c5c;--gold:#e3a72f;--bd:#d3dedb;--soft:#f3f7f6;
+--ok:#1e7a4c;--okb:#e4f3ea;--wn:#8a5a0b;--wnb:#fbf0d9;--bd2:#b3261e;--bdb:#fde8e6;--grid:rgba(15,76,92,.07);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1519;--card:#112126;--ink:#e4efee;--muted:#9db3b1;--pri:#0b3540;--bd:#26434a;--soft:#0d1b1f;--ok:#6fd39b;--okb:#123324;--wn:#e7b65a;--wnb:#3a2c0e;--bd2:#ff8a80;--bdb:#431b18;--grid:rgba(127,208,220,.06)}}
+:root[data-theme="dark"]{--bg:#0a1519;--card:#112126;--ink:#e4efee;--muted:#9db3b1;--pri:#0b3540;--bd:#26434a;--soft:#0d1b1f;--ok:#6fd39b;--okb:#123324;--wn:#e7b65a;--wnb:#3a2c0e;--bd2:#ff8a80;--bdb:#431b18;--grid:rgba(127,208,220,.06)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background-color:var(--bg);color:var(--ink);font:15px/1.5 "Source Sans 3",system-ui,sans-serif;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+h2{font:700 1.15rem Fraunces,Georgia,serif;margin:0 0 10px}
+header{position:relative;overflow:hidden;background:var(--pri);color:#fff;padding:16px 24px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between;border-bottom:4px solid var(--gold)}
+header::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 60'%3E%3Cpath d='M0 30H150L165 30L178 14L192 48L206 4L220 30H290L302 22L314 30H480' fill='none' stroke='%23E3A72F' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") repeat-x 0 center/480px 100%;animation:ecg 9s linear infinite}
+@keyframes ecg{to{background-position-x:-480px}}
+header>*{position:relative;z-index:1}
+.brand{font:700 1.7rem Fraunces,Georgia,serif;line-height:1.1}.tag{opacity:.85;font-size:.9rem}
+.hc{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{font:inherit;cursor:pointer}
+header button{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.7);border-radius:6px;padding:6px 14px;font-weight:600}
+main{max-width:1180px;margin:0 auto;padding:20px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.st{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;border-top:4px solid var(--c,var(--pri))}
+.st b{display:block;font:700 1.9rem/1.1 Fraunces,serif;color:var(--c,var(--ink))}.st span{color:var(--muted);font-size:.85rem}
+.cols{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.l0{--c:var(--ok);--cb:var(--okb)}.l1{--c:var(--wn);--cb:var(--wnb)}.l2{--c:var(--bd2);--cb:var(--bdb)}
+.wc{background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--c);border-radius:10px;padding:12px;cursor:pointer;transition:transform .15s}
+.wc:hover{transform:translateY(-2px)}.wc.sel{outline:2px solid var(--pri);outline-offset:1px}
+.top{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--cb);color:var(--c);font-weight:700;font-size:.78rem;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--c)}.l2 .dot{animation:p 1s infinite}
+@keyframes p{50%{opacity:.25}}
+.role{color:var(--muted);font-size:.82rem}
+.vit{display:flex;justify-content:space-between;margin:8px 0 2px}.vit small{display:block;color:var(--muted);font-size:.72rem}.vit b{font-size:1.15rem}
+.why{font-size:.8rem;color:var(--c);font-weight:600;min-height:1.2em}
+svg{display:block;width:100%}
+.hi{height:10px;border-radius:5px;background:linear-gradient(90deg,#2e9d63 0 30%,#e3a72f 30% 60%,#d9432f 60%);position:relative;margin:14px 0 6px}
+.hi i{position:absolute;top:-4px;width:4px;height:18px;background:var(--ink);border-radius:2px;transition:left .5s}
+.big{display:flex;justify-content:space-between;text-align:center}.big b{display:block;font:700 1.5rem Fraunces,serif}.big small{color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:6px;padding:7px 12px;font-weight:600}.btn.alt{background:none;color:var(--ink);border:1px solid var(--bd)}
+.btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.le{display:grid;grid-template-columns:70px 78px 1fr auto 62px;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--bd)}
+.le small{display:block;color:var(--muted)}.le code{color:var(--muted);font-size:.78rem}.tm{color:var(--muted);font-size:.82rem}
+.le button{background:none;border:1.5px solid var(--pri);color:var(--pri);border-radius:6px;padding:3px 10px;font-weight:600}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.sl{display:grid;grid-template-columns:1fr 54px;gap:2px 8px;font-size:.85rem;margin-bottom:6px}.sl input{grid-column:1/-1;width:100%;accent-color:var(--pri)}
+input[type=number],select{width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:6px;background:var(--soft);color:var(--ink);font:inherit}
+label{font-size:.82rem;color:var(--muted);font-weight:600}
+pre{background:var(--soft);border:1px solid var(--bd);border-radius:8px;padding:10px;font-size:.78rem;overflow-x:auto;margin:8px 0 0}
+.ft{text-align:center;color:var(--muted);font-size:.8rem;padding:6px 0 20px}
+@media(max-width:900px){.cols{grid-template-columns:1fr}.le{grid-template-columns:60px 1fr;}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">JaanBand</div><div class="tag">Har mazdoor ki jaan, ek band mein.</div></div>
+<div class="hc"><span id="clock"></span><button id="pp" type="button">Pause</button><button id="th" type="button">Theme</button></div></header>
+<main>
+<section class="stats" id="stats"></section>
+<div class="cols">
+<section><h2>Workers on site</h2><div class="grid" id="cards"></div></section>
+<aside><div class="card" id="site"></div><div class="card" id="det"></div></aside>
+</div>
+<section class="card"><h2>Safety audit log</h2><div id="log"></div></section>
+<div class="three">
+<section class="card"><h2>Alert rules</h2><div id="rules"></div><small style="color:var(--muted)">Demo thresholds, shown openly so every alert is explainable. Calibrate with occupational health guidance before real use.</small></section>
+<section class="card"><h2>Check a reading</h2>
+<label for="ch">Heart rate (bpm)</label><input type="number" id="ch" value="120">
+<label for="cs" style="display:block;margin-top:6px">SpO₂ (%)</label><input type="number" id="cs" value="93">
+<label for="ct" style="display:block;margin-top:6px">Skin temperature (°C)</label><input type="number" id="ct" value="36.2" step="0.1">
+<div id="cres" style="margin-top:10px"></div></section>
+<section class="card"><h2>Connect the real wearable</h2><p style="margin:0;color:var(--muted)">This demo runs on simulated workers. Your ESP32 would send this JSON to your backend every few seconds:</p>
+<pre>{
+  "worker_id": "W03",
+  "hr": 112,
+  "spo2": 96,
+  "skin_c": 35.2,
+  "ts": "2026-11-01T10:15:30Z"
+}</pre></section>
+</div>
+<div class="ft">Prototype for demonstration. Not a certified medical device. Estimated risk, not diagnosis.</div>
+</main>
+<script>
+const $=s=>document.querySelector(s),LB=["Fit to work","Caution","Rest now"];
+const T={hrY:115,hrR:140,spY:94,spR:90,tY:35.5,tR:37,hiY:32,hiR:41,brk:150};
+const DEF=[["hrY","Heart rate caution (bpm)",90,160,1],["hrR","Heart rate critical (bpm)",100,190,1],["spY","SpO₂ caution (%)",90,99,1],["spR","SpO₂ critical (%)",80,96,1],["tY","Skin temp caution (°C)",33,38,.1],["tR","Skin temp critical (°C)",34,39,.1],["hiY","Heat index caution (°C)",27,45,1],["hiR","Heat index critical (°C)",35,55,1],["brk","Break due after (min)",30,300,5]];
+const NAMES=[["Ramesh Patel","Mason",74,.5],["Sunita Devi","Welder",80,.9],["Imran Shaikh","Crane operator",72,.3],["Kavita Solanki","Rebar fixer",78,.8],["Mahesh Rathod","Carpenter",76,.6],["Pooja Chauhan","Painter",70,.4],["Dinesh Parmar","Electrician",75,.5],["Anita Vasava","Helper",79,.7]];
+const W=NAMES.map((a,i)=>({id:"W0"+(i+1),n:a[0],role:a[1],b:a[2],ld:a[3],hr:a[2]+10,sp:97,tk:33.6,hist:[],mins:20+Math.floor(Math.random()*120),lv:0,r:[],rest:0,st:0,last:-99}));
+let sel="W02",tick=0,speed=1,paused=false,heat=false,timer,site={t:29,rh:50,hi:29},LOG=[],prevId="0";
+const rnd=a=>(Math.random()-.5)*2*a,fmt=m=>Math.floor(m/60)+"h "+m%60+"m";
+function hiC(c,rh){const f=c*9/5+32;if(f<80)return c;const h=-42.379+2.04901523*f+10.14333127*rh-.22475541*f*rh-.00683783*f*f-.05481717*rh*rh+.00122874*f*f*rh+.00085282*f*rh*rh-.00000199*f*f*rh*rh;return +((h-32)*5/9).toFixed(1)}
+function ev(h,s,t,hi,m){let p=0,r=[],red=false;
+ const ck=(v,y,d,l,u,inv)=>{const a=inv?v<=d:v>=d,b=inv?v<=y:v>=y;if(a){p+=2;red=true;r.push(l+" "+v+u+" (critical)")}else if(b){p++;r.push(l+" "+v+u)}};
+ ck(h,T.hrY,T.hrR,"Heart rate"," bpm");ck(s,T.spY,T.spR,"SpO₂","%",1);ck(t,T.tY,T.tR,"Skin temp","°C");ck(hi,T.hiY,T.hiR,"Heat index","°C");
+ if(m>=T.brk){p++;r.push("No break for "+fmt(m))}
+ return{lv:red||p>=3?2:p>=1?1:0,r}}
+function hash(s){let h=5381;for(const c of s)h=((h<<5)+h+c.charCodeAt(0))>>>0;return h.toString(16).padStart(8,"0").slice(0,6)}
+function add(lv,who,msg,lab,ack){const t=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+ const id=hash(prevId+t+who+msg);prevId=id;LOG.unshift({id,t,lv,who,msg,lab:lab||LB[lv],ack:ack||null});if(LOG.length>40)LOG.pop()}
+function step(quiet){
+ tick++;const base=29+2.5*Math.sin(tick/40)+(heat?5.5:0);
+ site.t=+(site.t+(base-site.t)*.3+rnd(.1)).toFixed(1);site.rh=Math.round(Math.max(30,Math.min(90,site.rh+(52+(heat?6:0)-site.rh)*.2+rnd(1))));
+ const oldHi=site.hi;site.hi=hiC(site.t,site.rh);
+ if(!quiet&&((oldHi<T.hiR&&site.hi>=T.hiR)||(oldHi<T.hiY&&site.hi>=T.hiY)))add(site.hi>=T.hiR?2:1,"Site","heat index reached "+site.hi+"°C","Heat alert");
+ const over=Math.max(0,site.hi-30);
+ W.forEach(w=>{
+  if(w.rest>0)w.rest--;else w.mins+=2;
+  const rs=w.rest>0,thr=rs?w.b+4:w.b+26*w.ld+over*1.7+w.st*45;
+  w.hr+=(thr-w.hr)*.35+rnd(3);
+  const tt=33.4+Math.max(0,site.hi-28)*.15+w.st*1.2-(rs?.6:0);w.tk+=(tt-w.tk)*.2+rnd(.05);
+  const ts=Math.min(99,98-Math.max(0,site.hi-38)*.15-w.st*4);w.sp+=(ts-w.sp)*.3+rnd(.3);w.sp=Math.min(99,w.sp);
+  w.hist.push(Math.round(w.hr));if(w.hist.length>30)w.hist.shift();
+  const e=ev(Math.round(w.hr),Math.round(w.sp),+w.tk.toFixed(1),site.hi,w.mins);
+  if(!quiet&&e.lv>w.lv&&tick-w.last>8){w.last=tick;add(e.lv,w.n,e.r.join("; "))}
+  w.lv=e.lv;w.r=e.r});
+}
+function spark(h,c){if(h.length<2)return"";const p=h.map((v,i)=>(i*100/29).toFixed(1)+","+(24-(Math.min(Math.max(v,50),170)-50)/120*22).toFixed(1)).join(" ");return`<svg viewBox="0 0 100 26" height="26" preserveAspectRatio="none"><polyline points="${p}" fill="none" stroke="var(--c)" stroke-width="1.8" stroke-linejoin="round"/></svg>`}
+function render(){
+ const c=[0,0,0];W.forEach(w=>c[w.lv]++);const open=LOG.filter(a=>!a.ack&&a.lv>0).length,avg=Math.round(W.reduce((s,w)=>s+w.hr,0)/W.length);
+ $("#stats").innerHTML=[[c[0],"Fit to work","l0"],[c[1],"On caution","l1"],[c[2],"Rest now","l2"],[open,"Unacknowledged alerts",open?"l2":"l0"],[avg,"Average heart rate (bpm)",""]].map(s=>`<div class="st ${s[2]}"><b>${s[0]}</b><span>${s[1]}</span></div>`).join("");
+ $("#cards").innerHTML=W.map(w=>`<div class="wc l${w.lv}${w.id==sel?" sel":""}" data-id="${w.id}" tabindex="0"><div class="top"><b>${w.n}</b><span class="chip"><i class="dot"></i>${LB[w.lv]}</span></div><div class="role">${w.role} · ${w.id}</div><div class="vit"><div><small>HR</small><b>${Math.round(w.hr)}</b></div><div><small>SpO₂</small><b>${Math.round(w.sp)}%</b></div><div><small>Skin</small><b>${w.tk.toFixed(1)}°</b></div></div>${spark(w.hist)}<div class="why">${w.rest>0?"On break":(w.r[0]||"All readings normal")+(w.r.length>1?" +"+(w.r.length-1):"")}</div></div>`).join("");
+ const lv=site.hi>=T.hiR?2:site.hi>=T.hiY?1:0,adv=["Normal work. Keep water available.","Extra caution: shade breaks and water every 20 minutes.","Danger: limit heavy work and rest workers in shade."][lv];
+ const hold=document.activeElement&&document.activeElement.id=="sp";if(!hold)$("#site").innerHTML=`<h2>Site conditions</h2><div class="big"><div><b>${site.t}°</b><small>Air temp</small></div><div><b>${site.rh}%</b><small>Humidity</small></div><div class="l${lv}"><b style="color:var(--c)">${site.hi}°</b><small>Heat index</small></div></div><div class="hi"><i style="left:${Math.min(98,Math.max(0,(site.hi-25)/30*100))}%"></i></div><div class="l${lv}"><span class="chip">${adv}</span></div><div class="btns"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="hw" ${heat?"checked":""}> Simulate heatwave</label><select id="sp" style="width:auto"><option value="1">1× speed</option><option value="2">2× speed</option><option value="4">4× speed</option></select></div>`;
+ if(!hold)$("#sp").value=speed;
+ const w=W.find(x=>x.id==sel),py=v=>(118-(Math.min(Math.max(v,50),180)-50)/130*108).toFixed(1),pts=w.hist.map((v,i)=>(i*310/29+5).toFixed(1)+","+py(v)).join(" ");
+ $("#det").innerHTML=`<div class="l${w.lv}"><div class="top"><h2 style="margin:0">${w.n}</h2><span class="chip"><i class="dot"></i>${LB[w.lv]}</span></div></div><div class="role">${w.role} · since last break ${fmt(w.mins)}</div><svg viewBox="0 0 320 126" style="margin:8px 0"><line x1="0" x2="320" y1="${py(T.hrY)}" y2="${py(T.hrY)}" stroke="var(--wn)" stroke-dasharray="4 4"/><line x1="0" x2="320" y1="${py(T.hrR)}" y2="${py(T.hrR)}" stroke="var(--bd2)" stroke-dasharray="4 4"/><polyline points="${pts}" fill="none" stroke="var(--pri)" stroke-width="2.4" stroke-linejoin="round" style="stroke:var(--ink)"/></svg><div class="role">Heart rate, last 30 readings. Dashed lines: caution and critical.</div><ul style="margin:8px 0 0;padding-left:18px;font-size:.88rem">${(w.r.length?w.r:["All readings within limits"]).map(x=>"<li>"+x+"</li>").join("")}</ul><div class="btns"><button class="btn" data-act="brk" type="button">Send break</button><button class="btn alt" data-act="str" type="button">${w.st?"Clear stress":"Simulate stress"}</button></div>`;
+ $("#log").innerHTML=LOG.length?LOG.map(a=>`<div class="le l${a.lv}"><span class="tm">${a.t}</span><span class="chip">${a.lab}</span><div><b>${a.who}</b>: ${a.msg}<small>Notified: supervisor dashboard + wearable buzzer</small></div><div>${a.ack?"<small>Ack: "+a.ack+"</small>":(a.lv>0?`<button data-ack="${a.id}" type="button">Acknowledge</button>`:"")}</div><code>#${a.id}</code></div>`).join(""):'<small style="color:var(--muted)">No alerts yet. Alerts appear here with who was notified and what action was taken.</small>';
+}
+function renderChk(){const r=ev(+$("#ch").value,+$("#cs").value,+$("#ct").value,site.hi,0);$("#cres").innerHTML=`<div class="l${r.lv}"><span class="chip"><i class="dot"></i>${LB[r.lv]}</span></div><ul style="margin:8px 0 0;padding-left:18px;font-size:.88rem">${(r.r.length?r.r:["Within all limits"]).map(x=>"<li>"+x+"</li>").join("")}</ul><small style="color:var(--muted)">Uses current site heat index ${site.hi}°C</small>`}
+function loop(){clearInterval(timer);timer=setInterval(()=>{if(!paused){step();render();renderChk()}$("#clock").textContent=new Date().toLocaleTimeString()},2000/speed)}
+document.addEventListener("click",e=>{
+ const c=e.target.closest(".wc"),a=e.target.closest("[data-ack]"),b=e.target.closest("[data-act]");
+ if(c){sel=c.dataset.id;render()}
+ if(a){const x=LOG.find(l=>l.id==a.dataset.ack);if(x){x.ack="Supervisor, "+new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});render()}}
+ if(b){const w=W.find(x=>x.id==sel);
+  if(b.dataset.act=="brk"){w.rest=12;w.mins=0;add(0,w.n,"break ordered by supervisor, wearable buzzed","Action","System")}
+  else{w.st=w.st?0:1;add(0,w.n,w.st?"stress test started":"stress test cleared","Action","System")}render()}
+});
+document.addEventListener("change",e=>{if(e.target.id=="hw")heat=e.target.checked;if(e.target.id=="sp"){speed=+e.target.value;loop()}});
+["ch","cs","ct"].forEach(i=>$("#"+i).addEventListener("input",renderChk));
+$("#pp").onclick=()=>{paused=!paused;$("#pp").textContent=paused?"Resume":"Pause"};
+$("#th").onclick=()=>{const d=document.documentElement,cur=d.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");d.dataset.theme=cur=="dark"?"light":"dark"};
+$("#rules").innerHTML=DEF.map(d=>`<div class="sl"><label for="r_${d[0]}">${d[1]}</label><b id="v_${d[0]}">${T[d[0]]}</b><input type="range" id="r_${d[0]}" min="${d[2]}" max="${d[3]}" step="${d[4]}" value="${T[d[0]]}"></div>`).join("");
+DEF.forEach(d=>$("#r_"+d[0]).addEventListener("input",e=>{T[d[0]]=+e.target.value;$("#v_"+d[0]).textContent=T[d[0]];W.forEach(w=>{const r=ev(Math.round(w.hr),Math.round(w.sp),+w.tk.toFixed(1),site.hi,w.mins);w.lv=r.lv;w.r=r.r});render();renderChk()}));
+for(let i=0;i<12;i++)step(true);
+render();renderChk();$("#clock").textContent=new Date().toLocaleTimeString();loop();
+</script>
+</body>
+</html>

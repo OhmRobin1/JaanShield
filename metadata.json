@@ -1,0 +1,6 @@
+{
+  "name": "Obsidian Telemetry",
+  "description": "Mission-critical, hyper-precise telemetry command interface and tactical aerospace monitoring operations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
