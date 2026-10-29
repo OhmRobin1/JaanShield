@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AuditLogEntry } from '../types/jaanband';
+import { AuditLogEntry } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { ShieldCheck, CheckCircle2, Download, FileText, Award, AlertCircle, Stamp } from 'lucide-react';
 
@@ -51,7 +51,7 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
   const exportAuditReport = () => {
     safetyAudio.playClick();
     const content = `===============================================================
-JAANBAND STATUTORY OCCUPATIONAL SAFETY & COMPLIANCE REPORT
+JaanShield STATUTORY OCCUPATIONAL SAFETY & COMPLIANCE REPORT
 Building and Other Construction Workers (BOCW) Act Verification
 Date of Generation: ${new Date().toISOString()}
 Compliance Score: 100% (All 5 Heat Stress Mandates Fulfilled)
@@ -91,7 +91,7 @@ End of Statutory Inspection Report. Valid for Labour Regulator Audits.
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `JaanBand_BOCW_Statutory_Report_${new Date().toISOString().slice(0, 10)}.txt`;
+    link.download = `JaanShield_BOCW_Statutory_Report_${new Date().toISOString().slice(0, 10)}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

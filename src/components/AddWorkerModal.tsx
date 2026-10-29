@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ConstructionWorker } from '../types/jaanband';
+import { ConstructionWorker } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { X, UserPlus, HardHat } from 'lucide-react';
 

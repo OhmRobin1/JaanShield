@@ -1,5 +1,5 @@
 /**
- * Audio Synthesizer for JaanBand Worker Safety Wearables & Supervisor Dashboard
+ * Audio Synthesizer for JaanShield Worker Safety Wearables & Supervisor Dashboard
  * Generates wearable buzzers, haptic vibration tones, and safety alert chimes using Web Audio API.
  */
 

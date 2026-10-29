@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ConstructionWorker, SiteConditions } from '../types/jaanband';
+import { ConstructionWorker, SiteConditions } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { MapPin, Sun, Wind, Droplets, Flame, Users, AlertTriangle, ShieldCheck, CheckCircle2 } from 'lucide-react';
 

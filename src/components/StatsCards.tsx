@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConstructionWorker, AuditLogEntry, RiskLevel } from '../types/jaanband';
+import { ConstructionWorker, AuditLogEntry, RiskLevel } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { CheckCircle2, AlertTriangle, AlertOctagon, ShieldAlert, Heart } from 'lucide-react';
 

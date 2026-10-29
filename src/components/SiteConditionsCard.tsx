@@ -1,5 +1,5 @@
 import React from 'react';
-import { SiteConditions } from '../types/jaanband';
+import { SiteConditions } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { Sun, Droplets, Flame, AlertCircle, Radio, Gauge } from 'lucide-react';
 

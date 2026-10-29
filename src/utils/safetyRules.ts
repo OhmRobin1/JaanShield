@@ -1,4 +1,4 @@
-import { AlertThresholds, RuleEvaluationResult } from '../types/jaanband';
+import { AlertThresholds, RuleEvaluationResult } from '../types/JaanShield';
 
 /**
  * Standard Rothfusz Regression Formula for Heat Index (°C)

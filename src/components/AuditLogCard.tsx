@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AuditLogEntry, RiskLevel } from '../types/jaanband';
+import { AuditLogEntry, RiskLevel } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { ShieldCheck, Download, Search, CheckCircle2, AlertOctagon, AlertTriangle, Copy, Check } from 'lucide-react';
 
@@ -52,7 +52,7 @@ export const AuditLogCard: React.FC<AuditLogCardProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `JaanBand_Safety_Audit_Log_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `JaanShield_Safety_Audit_Log_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

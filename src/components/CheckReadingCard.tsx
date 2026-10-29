@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertThresholds } from '../types/jaanband';
+import { AlertThresholds } from '../types/JaanShield';
 import { evaluateVitals } from '../utils/safetyRules';
 import { Stethoscope, CheckCircle2, AlertTriangle, AlertOctagon, Heart, Wind, Thermometer } from 'lucide-react';
 

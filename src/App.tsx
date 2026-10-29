@@ -5,7 +5,7 @@ import {
   SiteConditions,
   AuditLogEntry,
   RiskLevel,
-} from './types/jaanband';
+} from './types/JaanShield';
 import {
   INITIAL_WORKERS,
   DEFAULT_THRESHOLDS,
@@ -560,7 +560,7 @@ export default function App() {
             <span>
               {isHindi
                 ? 'जानबैंड: हर मज़दूर की सुरक्षा, स्वास्थ्य और सम्मान के लिए समर्पित'
-                : 'JaanBand: Dedicated to worker health, occupational safety, and zero heat-stress deaths'}
+                : 'JaanShield: Dedicated to worker health, occupational safety, and zero heat-stress deaths'}
             </span>
           </div>
           <div className="text-[11px] text-[var(--muted)] max-w-xl mx-auto leading-relaxed">

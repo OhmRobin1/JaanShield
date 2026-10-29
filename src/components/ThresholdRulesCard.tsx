@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertThresholds } from '../types/jaanband';
+import { AlertThresholds } from '../types/JaanShield';
 import { THRESHOLD_DEFINITIONS } from '../data/initialData';
 import { safetyAudio } from '../utils/audio';
 import { SlidersHorizontal, RotateCcw, ShieldAlert } from 'lucide-react';

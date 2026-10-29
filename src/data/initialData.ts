@@ -1,4 +1,4 @@
-import { ConstructionWorker, AlertThresholds, SiteConditions, AuditLogEntry } from '../types/jaanband';
+import { ConstructionWorker, AlertThresholds, SiteConditions, AuditLogEntry } from '../types/JaanShield';
 
 export const DEFAULT_THRESHOLDS: AlertThresholds = {
   hrY: 115,

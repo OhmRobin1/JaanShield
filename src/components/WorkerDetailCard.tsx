@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConstructionWorker, AlertThresholds } from '../types/jaanband';
+import { ConstructionWorker, AlertThresholds } from '../types/JaanShield';
 import { formatDuration } from '../utils/safetyRules';
 import { safetyAudio } from '../utils/audio';
 import { Coffee, Activity, CheckCircle2, AlertTriangle, AlertOctagon, User, Clock, BellRing } from 'lucide-react';

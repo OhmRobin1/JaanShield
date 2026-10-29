@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SiteConditions } from '../types/jaanband';
+import { SiteConditions } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { CalendarClock, Bell, Droplets, Coffee, ShieldAlert, CheckCircle2, Clock } from 'lucide-react';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConstructionWorker } from '../types/jaanband';
+import { ConstructionWorker } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { Heart, Activity, Thermometer, Wind, CheckCircle2, AlertTriangle, AlertOctagon } from 'lucide-react';
 

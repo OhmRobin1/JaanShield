@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ConstructionWorker } from '../types/jaanband';
+import { ConstructionWorker } from '../types/JaanShield';
 import { safetyAudio } from '../utils/audio';
 import { Cpu, BatteryCharging, Radio, Vibrate, CheckCircle2, RefreshCw, Zap } from 'lucide-react';
 
